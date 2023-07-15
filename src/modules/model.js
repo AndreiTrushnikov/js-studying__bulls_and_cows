@@ -5,26 +5,32 @@ import 'regenerator-runtime/runtime'
 export default class Model {
     constructor(props) {
         this.minNumber = 0;
-        this.maxNumber = 9;
+        this.maxNumber = 10;
 
-        this._secretNumbers = {
-            1: 0,
-            2: 0,
-            3: 0,
-            4: 0
-        };
+        this._secretNumbers = [];
 
         this._userNumbers = {};
-        this.userNumberHTML = '';
+        this.response = {
+            innerHTML: '',
+            error: false
+        };
+        this.lengthOfSecretNumber = 4;
+    }
+    getRandomUniqueNumber() {
+        let curNumber = this.getRandomNumber();
+        if (this._secretNumbers.includes(curNumber)) {
+            curNumber = this.getRandomUniqueNumber();
+        }
+        return curNumber;
     }
     getRandomNumber() {
         return Math.floor(Math.random() * (this.maxNumber - this.minNumber)) + this.minNumber;
     }
 
     _setSecretNumbers() {
-        let key;
-        for (key in this._secretNumbers) {
-            this._secretNumbers[key] = this.getRandomNumber();
+        let i = 0;
+        for (i; i < this.lengthOfSecretNumber; i++) {
+            this._secretNumbers.push(this.getRandomUniqueNumber());
         }
         console.log('this._secretNumbers',this._secretNumbers)
     }
@@ -48,75 +54,85 @@ export default class Model {
             return 9;
         }
         if (cur < 0) {
-            return 0
+            return 0;
         }
         return cur;
     }
 
     async checkNumbers(userNumbers) {
+        this._userNumbers = userNumbers;
+
         try {
-            this._userNumbers = userNumbers;
-            // debugger
-            this.userNumberHTML = await this._createUserNumbersHTML();
+            if (!this.checkUniqueNumbers()) {
+                this.response['error'] = true;
+            } else {
+                this.response['innerHTML'] = await this._createUserNumbersHTML();
+                this.response['error'] = false;
+            }
         } catch (err) {
-            console.log('err = ',err); // todo err не определена и падает с ошибкой. Почему?
+            console.log('err = ',err);
         }
-        return this.userNumberHTML;
+
+        return this.response;
+    }
+
+    checkUniqueNumbers() {
+        let result = [];
+
+        for (let num of this._userNumbers) {
+            if (!result.includes(num)) {
+                result.push(num);
+            }
+        }
+
+        return result.length === this._userNumbers.length;
     }
 
     async _createUserNumbersHTML() {
         let response = this._checkEveryNumber();
-        console.log('response _createUserNumbersHTML',response)
-        let key;
-        let result = `<span>`;
-        for (key in response) {
-             result += `<span class="${response[key]['type']}">
-                            ${response[key]['value']}
-                        </span>`
-        }
-        result += `</span>`
+        let result = `
+            <span>
+                <span>${this._userNumbers.join('')} </span>
+                <span class="bull"> ${response['bullCount']} ${this.numWord(+response['bullCount'], ['бык', 'быка', 'быков'])}</span>
+                <span class="cow"> ${response['cowCount']} ${this.numWord(+response['cowCount'], ['корова', 'коровы', 'коров'])}</span>
+            </span>
+        `;
 
-        return result
+        return result;
     }
 
-    _checkEveryNumber() {
-        let key;
-        let response = {
-            1: {},
-            2: {},
-            3: {},
-            4: {}
-        };
-        for (key in this._userNumbers) {
-            if (this._userNumbers[key] === this._secretNumbers[key]) {
-                response[key]['type'] = 'bull'
-            } else if (response[key]['type'] !== 'bull' && this._checkOnCow(this._userNumbers[key])) {
-                response[key]['type'] = 'cow'
-            } else {
-                response[key]['type'] = 'err'
-            }
 
-            response[key]['value'] = this._userNumbers[key];
-        }
+    numWord(value, words) {
+        if (value === 1) return words[0];
+        if (value > 1 && value < 5) return words[1];
+        if ((value > 4) || value === 0) return words[2];
+        return words[2];
+    }
+
+
+    _checkEveryNumber() {
+        let response = {
+            bullCount: 0,
+            cowCount: 0
+        };
+        this._userNumbers.forEach((number, key) => {
+            if (+number === this._secretNumbers[+key]) {
+                response.bullCount++;
+            } else if (this._checkCow(+number)) {
+                response.cowCount++;
+            }
+        })
         return response;
     }
 
-    _checkOnCow(userNUmber) {
-        let key;
-        let inc = 0;
-        for (key in this._secretNumbers) {
-            if (userNUmber === this._secretNumbers[key]) {
-                inc++;
-            }
-        }
-        return inc > 0;
+    _checkCow(userNumber) {
+        let response = this._secretNumbers.filter((number) => {
+            return userNumber !== number
+        })
+        return response.length !== this._secretNumbers.length;
     }
-
 
     init() {
         this._setSecretNumbers();
     }
-
-
-
 }

@@ -6,6 +6,8 @@ export default class View {
     constructor(props) {
         this.gameContainer = props.gameContainer;
         if (!this.gameContainer) throw new Error('На странице не найден главный блок');
+
+        this.error = `<span class="error" id="error">Все числа должны быть уникальными!</span>`;
     }
 
     drawField() {
@@ -49,7 +51,21 @@ export default class View {
     }
 
     drawUserNumbersLine(data) {
-        this.gameContainer.querySelector('#answers').insertAdjacentHTML('beforeend', data);
+        if (data.error) {
+            this.gameContainer.querySelector('#answers').insertAdjacentHTML('beforeend', this.error);
+            setTimeout(() => {
+                this.gameContainer.querySelector('#error').remove();
+            }, 3000)
+        } else {
+            this.gameContainer.querySelector('#answers').insertAdjacentHTML('beforeend', data['innerHTML']);
+
+        }
+    }
+
+
+
+    clearError() {
+
     }
 
     init() {

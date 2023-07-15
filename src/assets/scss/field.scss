@@ -49,11 +49,11 @@
     gap: 8px;
     & span {
       display: flex;
-      gap: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
       & > span {
         display: inline-flex;
         justify-content: center;
-        width: 48px;
       }
     }
   }
@@ -76,17 +76,14 @@
 .cow {
   font-weight: bold;
   color: blue;
-  background-color: #fff;
 }
 
 .bull {
   font-weight: bold;
   color: green;
-  background-color: #fff;
 }
 
-.err {
+.error {
   font-weight: bold;
   color: red;
-  background-color: #fff;
 }

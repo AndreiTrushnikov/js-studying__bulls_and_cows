@@ -5,12 +5,7 @@ export default class Controller {
         this.view = view;
         this.model = model;
         this.gameContainer = gameContainer;
-        this._userNumbers = {
-            1: '',
-            2: '',
-            3: '',
-            4: '',
-        };
+        this._userNumbers = [];
 
         this.view.init();
 
@@ -35,29 +30,19 @@ export default class Controller {
 
         this.submitBtn.addEventListener('click', (e) => {
             this.inputBlocks.forEach(block => {
-                this._userNumbers[block.dataset.place] = +block.querySelector('input').value;
+                this._userNumbers.push(+block.querySelector('input').value);
             })
 
-            // let key1 = 1;
-            // let key2 = 2;
-            //
-            // let inc = 0;
-            // for (key1 in this._userNumbers) {
-            //     let cur = this._userNumbers[key1];
-            //     for (key2 in this._userNumbers) {
-            //         if (this._userNumbers[key2] === cur) {
-            //             inc++
-            //         }
-            //     }
-            // }
-
-            // console.log('inc', inc)
+            if (this.gameContainer.querySelector('#error')) {
+                this.gameContainer.querySelector('#error').remove();
+            }
 
             this.model.checkNumbers(this._userNumbers)
                 .then((data) => {
                     this.view.drawUserNumbersLine(data);
+
+                    this._userNumbers = [];
                 });
-            // this.
         })
     }
 
