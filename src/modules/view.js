@@ -1,10 +1,10 @@
 // template
 import Controller from "./controller";
+import Model from "./model";
 
 export default class View {
     constructor(props) {
         this.gameContainer = props.gameContainer;
-
         if (!this.gameContainer) throw new Error('На странице не найден главный блок');
     }
 
@@ -16,40 +16,29 @@ export default class View {
                     Ваш ответ?
                 </div>
                 <div class="field__inputs">
-                    <div class="field__input-block" id="place1">
+                    <div class="field__input-block" data-place="1" id="place1">
                         <button data-action="plus">+</button>
                         <input type="text" name="place1" readonly value="0">
                         <button data-action="minus">-</button>
                     </div>
-                    <div class="field__input-block" id="place2">
+                    <div class="field__input-block" data-place="2" id="place2">
                         <button data-action="plus">+</button>
                         <input type="text" name="place1" readonly value="0">
                         <button data-action="minus">-</button>
                     </div>
-                    <div class="field__input-block" id="place3">
+                    <div class="field__input-block" data-place="3" id="place3">
                         <button data-action="plus">+</button>
                         <input type="text" name="place1" readonly value="0">
                         <button data-action="minus">-</button>
                     </div>
-                    <div class="field__input-block" id="place4">
+                    <div class="field__input-block" data-place="4" id="place4">
                         <button data-action="plus">+</button>
                         <input type="text" name="place1" readonly value="0">
                         <button data-action="minus">-</button>
                     </div>
                 </div>
+                <button type="button" class="field__submit-btn" data-submit-btn>Отправить</button>
                 <div class="field__answers" id="answers">
-                    <span>
-                        <span class="cow">1</span>
-                        <span class="error">1</span>
-                        <span class="bull">1</span>
-                        <span class="error">1</span>
-                    </span>
-                    <span>
-                        <span class="cow">1</span>
-                        <span class="error">1</span>
-                        <span class="bull">1</span>
-                        <span class="error">1</span>
-                    </span>
                 </div>
             </div>
         `
@@ -59,10 +48,11 @@ export default class View {
         this.gameContainer.innerHTML = this.drawField();
     }
 
+    drawUserNumbersLine(data) {
+        this.gameContainer.querySelector('#answers').insertAdjacentHTML('beforeend', data);
+    }
+
     init() {
         this.insertField();
-        setTimeout(() => {
-            new Controller().init();
-        }, 100);
     }
 }

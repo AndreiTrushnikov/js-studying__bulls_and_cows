@@ -2,7 +2,7 @@
 
 
 .field {
-  width: 400px;
+  width: 264px;
   height: auto;
   padding: 24px;
   background-color: #aef8a5;
@@ -32,9 +32,9 @@
         text-align: center;
       }
       & button {
-        background: #fff;
         width: 100%;
         cursor: pointer;
+        background: #efffe9;
         border: #aef8a5;
         outline: none;
         &:hover, &:active, &:focus, &:focus-visible {
@@ -57,6 +57,20 @@
       }
     }
   }
+  &__submit-btn {
+    border: none;
+    outline: none;
+    color: #fff;
+    background-color: #4f9d46;
+    height: 32px;
+    cursor: pointer;
+    &:hover {
+      background-color: #3d8535;
+    }
+    &:active {
+      background-color: #296722;
+    }
+  }
 }
 
 .cow {
@@ -66,6 +80,12 @@
 }
 
 .bull {
+  font-weight: bold;
+  color: green;
+  background-color: #fff;
+}
+
+.err {
   font-weight: bold;
   color: red;
   background-color: #fff;

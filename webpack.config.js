@@ -56,7 +56,7 @@ module.exports = {
             }
         }),
         new HtmlWebpackPlugin({
-            title: 'Miner 9*9 = 10 mines',
+            title: 'Bulls and Cows',
             filename: 'index.html',
             template: path.resolve(__dirname, 'src/index.html')
         }),

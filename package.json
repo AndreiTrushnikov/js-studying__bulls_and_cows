@@ -40,7 +40,9 @@
   },
   "dependencies": {
     "concurrently": "^6.5.0",
+    "core-js": "^3.31.1",
     "normalize.css": "^8.0.1",
+    "regenerator-runtime": "^0.13.11",
     "remove-files-webpack-plugin": "^1.5.0"
   }
 }
