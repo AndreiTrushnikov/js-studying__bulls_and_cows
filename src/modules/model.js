@@ -1,4 +1,3 @@
-// logic
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 
@@ -12,9 +11,10 @@ export default class Model {
         this._userNumbers = {};
         this.response = {
             innerHTML: '',
-            error: false
+            error: false,
+            winner: false
         };
-        this.lengthOfSecretNumber = 4;
+        this.lengthOfSecretNumber = props.lengthOfSecretNumber;
     }
     getRandomUniqueNumber() {
         let curNumber = this.getRandomNumber();
@@ -32,7 +32,6 @@ export default class Model {
         for (i; i < this.lengthOfSecretNumber; i++) {
             this._secretNumbers.push(this.getRandomUniqueNumber());
         }
-        console.log('this._secretNumbers',this._secretNumbers)
     }
 
     increase(e) {
@@ -66,8 +65,15 @@ export default class Model {
             if (!this.checkUniqueNumbers()) {
                 this.response['error'] = true;
             } else {
-                this.response['innerHTML'] = await this._createUserNumbersHTML();
+                let response = this._checkEveryNumber();
+                this.response['innerHTML'] = await this._createUserNumbersHTML(response);
                 this.response['error'] = false;
+
+                let result = '';
+                if (response.bullCount === this._userNumbers.length) {
+                    this.response['innerHTML'] += `<span class="win">Победа!</span>`
+                    this.response['winner'] = true;
+                }
             }
         } catch (err) {
             console.log('err = ',err);
@@ -88,8 +94,7 @@ export default class Model {
         return result.length === this._userNumbers.length;
     }
 
-    async _createUserNumbersHTML() {
-        let response = this._checkEveryNumber();
+    async _createUserNumbersHTML(response) {
         let result = `
             <span>
                 <span>${this._userNumbers.join('')} </span>
@@ -99,6 +104,10 @@ export default class Model {
         `;
 
         return result;
+    }
+
+    stopGame() {
+
     }
 
 
@@ -116,9 +125,13 @@ export default class Model {
             cowCount: 0
         };
         this._userNumbers.forEach((number, key) => {
+            let isCurNumberIsBull = false;
             if (+number === this._secretNumbers[+key]) {
                 response.bullCount++;
-            } else if (this._checkCow(+number)) {
+                isCurNumberIsBull = true;
+            }
+
+            if (!isCurNumberIsBull && this._checkCow(+number)) {
                 response.cowCount++;
             }
         })

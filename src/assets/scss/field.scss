@@ -64,6 +64,7 @@
     background-color: #4f9d46;
     height: 32px;
     cursor: pointer;
+    width: 100%;
     &:hover {
       background-color: #3d8535;
     }
@@ -86,4 +87,18 @@
 .error {
   font-weight: bold;
   color: red;
+}
+
+.win  {
+  color: green;
+  font-weight: bold;
+  background: #fff;
+  padding: 8px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.d-none {
+  display: none;
 }
