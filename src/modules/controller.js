@@ -19,7 +19,13 @@ export default class Controller {
         if (!this.submitBtn) throw new Error('Не найдена кнопка отправки данных');
 
         this.newGameBtn = this.gameContainer.querySelector('[data-new-game-btn]');
-        if (!this.submitBtn) throw new Error('Не найдена кнопка начала новой игры');
+        if (!this.newGameBtn) throw new Error('Не найдена кнопка начала новой игры');
+
+        this.showRulesButton = this.gameContainer.querySelector('[data-rules-btn]');
+        if (!this.showRulesButton) throw new Error('Не найдена кнопка показа правил');
+
+        this.rulesBlock = this.gameContainer.querySelector('[data-rules]');
+        if (!this.showRulesButton) throw new Error('Не найдена кнопка показа правил');
     }
 
     addEventListeners() {
@@ -36,6 +42,7 @@ export default class Controller {
 
         this.submitBtn.addEventListener('click', (e) => this.handleSubmitUserNumbers())
         this.newGameBtn.addEventListener('click', (e) => this.handleStartNewGame())
+        this.showRulesButton.addEventListener('click', (e) => this.toggleRules())
     }
 
     handleSubmitUserNumbers() {
@@ -76,6 +83,11 @@ export default class Controller {
     toggleButtons() {
         this.submitBtn.classList.toggle('d-none');
         this.newGameBtn .classList.toggle('d-none');
+    }
+
+    toggleRules() {
+        this.rulesBlock.classList.toggle('d-none')
+        this.showRulesButton.textContent = (this.rulesBlock.classList.contains('d-none')) ? 'Показать правила' : 'Скрыть правила';
     }
 
 
